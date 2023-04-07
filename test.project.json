@@ -1,0 +1,18 @@
+{
+	"name": "rbxmodules",
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Test": {
+				"$path": "test"
+			}
+		},
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"TestRunner": {
+				"$path": "ci"
+			}
+		}
+	}
+}
