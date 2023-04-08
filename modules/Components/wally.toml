@@ -1,0 +1,9 @@
+[package]
+name = "noahrepublic/components"
+description = "Component system for binding constructors to entities"
+version = "0.1.0"
+license = "MIT"
+authors = ["noahrepublic (https://github.com/noahrepublic)"]
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
