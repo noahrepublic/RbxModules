@@ -55,7 +55,7 @@ end
 function Loader.StartModules(modulesToStart: { [string]: table }, startMethod: string): nil
 	startMethod = startMethod or "Start"
 
-	for _, module in ipairs(modulesToStart) do
+	for _, module in pairs(modulesToStart) do
 		if type(module) ~= "table" then
 			continue
 		end
