@@ -22,7 +22,7 @@ jobs:
 
     - name: Lint
       run: |
-        selene -q ./modules
+        selene ./modules
 
   style:
     name: Styling
