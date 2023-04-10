@@ -13,7 +13,7 @@ Component.__index = Component
 
 type Constructor = { -- For intelisense
 	[string]: any,
-	new: (Entity) -> nil,
+	new: (Instance) -> nil,
 	_tag: string, -- Component tag
 }
 
@@ -68,13 +68,15 @@ function Component:Start()
 	end
 end
 
---[[ Component:_add
+--[[ Component:_add()
 	Internal function to add an binded constructor to an entity.
 
 	SHOULD ONLY BE CALLED INTERNALY
+
+	@param entity: Instance - The instance to bind the constructor to
 ]]
 
-function Component:_add(entity)
+function Component:_add(entity: Instance)
 	local bindedConstructor = self._constructor.new(entity)
 
 	self.Entities[entity] = Entity.new(entity, self._tag)
@@ -89,6 +91,8 @@ end
 	Internal function to remove an binded constructor from an entity.
 
 	SHOULD ONLY BE CALLED INTERNALY
+
+	@param entity: Instance - The instance to bind the constructor to
 ]]
 
 function Component:_remove(entity)
@@ -101,21 +105,25 @@ function Component:_remove(entity)
 	end
 end
 
---[[ Component:Bind(entity: Entity)
+--[[ Component:Bind()
     Binds the entity to the component by adding the tag.
+
+	@param entity: Instance - The instance to bind the constructor to
 ]]
 
-function Component:Bind(entity: Entity)
+function Component:Bind(entity: Instance)
 	assert(entity, "Entity is nil")
 
 	CollectionService:AddTag(entity, self._tag)
 end
 
---[[ Component:Unbind(entity: Entity)
+--[[ Component:Unbind()
     Unbinds the entity from the component by removing the tag.
+
+	@param entity: Instance - The instance to bind the constructor to
 ]]
 
-function Component:Unbind(entity: Entity)
+function Component:Unbind(entity: Instance)
 	assert(entity, "Entity is nil")
 
 	CollectionService:RemoveTag(entity, self._tag)
@@ -131,14 +139,12 @@ function Component:UnbindAll()
 	end
 end
 
---[[ Component:Get(entity: Entity)
+--[[ Component:Get(entity: Instance)
     Returns the constructor instance binded to the entity.
 ]]
 
-function Component:Get(entity: Entity)
+function Component:Get(entity: Instance)
 	assert(entity, "Entity is nil")
-
-	print(self._binded[entity])
 
 	return self._binded[entity]
 end

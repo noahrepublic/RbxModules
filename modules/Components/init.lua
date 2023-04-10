@@ -15,7 +15,7 @@ local Component = require(script.Component)
 
 type Constructor = { -- For intelisense
 	[string]: any,
-	new: (Entity) -> nil,
+	new: (Instance) -> nil,
 	_tag: string, -- Component tag
 }
 
