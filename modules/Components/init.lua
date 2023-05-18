@@ -13,7 +13,7 @@ local Component = require(script.Component)
 
 --> Types
 
-type Constructor = { -- For intelisense
+export type Constructor = { -- For intelisense
 	[string]: any,
 	new: (Instance) -> nil,
 	_tag: string, -- Component tag
