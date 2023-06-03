@@ -6,9 +6,9 @@ local Loader = {
 	Modules = {},
 }
 
---> Functions
+--> Private Functions
 
-function Loader.LoadModule(module: ModuleScript)
+local function loadModule(module: ModuleScript)
 	local name = module.Name
 
 	if Loader.Modules[name] then
@@ -21,6 +21,19 @@ function Loader.LoadModule(module: ModuleScript)
 	return loadedModule
 end
 
+--> Functions
+
+function Loader.Get(module: ModuleScript | string)
+	if typeof(module) ~= "Instance" and type(module) == "string" then
+		local loadedModule = Loader.Modules[module]
+
+		assert(loadedModule, string.format("Can not string load module %s, has not been loaded yet.", module))
+		return loadedModule
+	end
+
+	return loadModule(module)
+end
+
 function Loader.LoadChildren(parent: Instance, loadCondition: (ModuleScript) -> boolean): table
 	local modules = {}
 	for _, child in pairs(parent:GetChildren()) do
@@ -29,7 +42,7 @@ function Loader.LoadChildren(parent: Instance, loadCondition: (ModuleScript) -> 
 		end
 
 		if loadCondition == nil or loadCondition(child) then
-			modules[child.Name] = Loader.LoadModule(child)
+			modules[child.Name] = Loader.Get(child)
 		end
 	end
 
@@ -40,12 +53,11 @@ function Loader.LoadDescendants(parent: Instance, loadCondition: (ModuleScript) 
 	local modules = {}
 	for _, descendant in pairs(parent:GetDescendants()) do
 		if not descendant:IsA("ModuleScript") then
-			print(descendant.Name)
 			continue
 		end
 
 		if loadCondition == nil or loadCondition(descendant) then
-			modules[descendant.Name] = Loader.LoadModule(descendant)
+			modules[descendant.Name] = Loader.Get(descendant)
 		end
 	end
 

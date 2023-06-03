@@ -42,13 +42,13 @@ return function()
 	end)
 	describe("Storing", function()
 		it("should have a module named 'Test'", function()
-			local module = Loader.Modules["Test"]
+			local module = Loader.Get("Test")
 
 			expect(module).to.be.ok()
 		end)
 
 		it("should have a module named 'DescendantTest'", function()
-			local module = Loader.Modules["DescendantTest"]
+			local module = Loader.Get("DescendantTest")
 
 			expect(module).to.be.ok()
 		end)
