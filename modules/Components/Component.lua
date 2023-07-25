@@ -103,8 +103,6 @@ function Component:_remove(entity)
 		return
 	end
 
-	self:Unbind(entity) -- incase :destroyed was called
-
 	self._binded[entity] = nil
 	if bindedConstructor and bindedConstructor.Destroy then
 		bindedConstructor:Destroy()
