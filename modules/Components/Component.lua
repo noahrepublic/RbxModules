@@ -19,8 +19,6 @@ type Constructor = { -- For intelisense
 
 --> Variables
 
-local Entity = require(script.Parent.Entity)
-
 --> Public Functions
 
 --[[ Component.new()
@@ -34,7 +32,7 @@ local Entity = require(script.Parent.Entity)
 function Component.new(tag: string, constructor: Constructor, startMethod: string | nil)
 	assert(tag, "Tag is nil")
 
-	local self = setmetatable(Component, {})
+	local self = setmetatable({}, Component)
 
 	self._tag = tag
 	self._constructor = constructor
@@ -77,9 +75,12 @@ end
 ]]
 
 function Component:_add(entity: Instance)
+	if self._binded[entity] ~= nil then
+		return
+	end
+
 	local bindedConstructor = self._constructor.new(entity)
 
-	self.Entities[entity] = Entity.new(entity, self._tag)
 	self._binded[entity] = bindedConstructor
 
 	if self._startMethod and bindedConstructor[self._startMethod] then
@@ -98,7 +99,12 @@ end
 function Component:_remove(entity)
 	local bindedConstructor = self:Get(entity)
 
-	self.Entities[entity]:Destroy()
+	if bindedConstructor == nil then
+		return
+	end
+
+	self:Unbind(entity) -- incase :destroyed was called
+
 	self._binded[entity] = nil
 	if bindedConstructor and bindedConstructor.Destroy then
 		bindedConstructor:Destroy()
@@ -134,7 +140,7 @@ end
 ]]
 
 function Component:UnbindAll()
-	for entity, _ in pairs(self._binded) do
+	for entity, _ in self._binded do
 		self:Unbind(entity)
 	end
 end

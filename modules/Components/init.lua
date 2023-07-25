@@ -28,7 +28,7 @@ function Components.LoadComponent(constructor: Constructor)
 
 	Components.Components[constructor._tag] = component
 
-	return setmetatable(Components, component)
+	return component
 end
 
 return Components
