@@ -62,11 +62,29 @@ return function()
 		it("should bind a component to an entity", function()
 			Component:Bind(entity)
 			expect(CollectionService:HasTag(entity, tag)).to.equal(true)
+			expect(Component:Get(entity)).to.be.ok()
 		end)
 
 		it("should unbind a component from an entity", function()
 			Component:Unbind(entity)
 			expect(CollectionService:HasTag(entity, tag)).to.equal(false)
+			expect(Component:Get(entity)).to.equal(nil)
+		end)
+	end)
+
+	describe("Cloning should work", function()
+		it("should init a new component", function()
+			Component:Bind(entity)
+
+			local test = Component:Get(entity)
+			expect(test).to.be.ok()
+
+			local clonedEntity = entity:Clone()
+			clonedEntity.Parent = workspace
+
+			expect(Component:Get(clonedEntity)).to.be.ok()
+
+			clonedEntity:Destroy()
 		end)
 	end)
 
