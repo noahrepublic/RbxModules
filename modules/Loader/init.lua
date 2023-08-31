@@ -24,7 +24,7 @@ end
 --> Functions
 
 function Loader.Get(module: ModuleScript | string)
-	if typeof(module) ~= "Instance" and type(module) == "string" then
+	if type(module) == "string" then
 		local loadedModule = Loader.Modules[module]
 
 		assert(loadedModule, string.format("Can not string load module %s, has not been loaded yet.", module))
@@ -64,7 +64,7 @@ function Loader.LoadDescendants(parent: Instance, loadCondition: (ModuleScript) 
 	return modules
 end
 
-function Loader.StartModules(modulesToStart: { [string]: table }, startMethod: string): nil
+function Loader.StartModules(modulesToStart: { [string]: {} }, startMethod: string): nil
 	startMethod = startMethod or "Start"
 
 	for _, module in pairs(modulesToStart) do
@@ -76,6 +76,8 @@ function Loader.StartModules(modulesToStart: { [string]: table }, startMethod: s
 			module[startMethod]()
 		end
 	end
+
+	return nil
 end
 
 return Loader
