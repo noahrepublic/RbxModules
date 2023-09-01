@@ -1,10 +1,11 @@
 -- handles dependency finding in an priority order
 
 --[[
+	- Direct Children
+
     - Packages
     - Server Packages (server only)
 
-    - Children
 ]]
 
 --> Services
@@ -16,6 +17,11 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local SHARED_PACKAGES = ReplicatedStorage:FindFirstChild("Packages")
 local SERVER_PACKAGES = ServerStorage:FindFirstChild("Packages") or ServerStorage:FindFirstChild("ServerPackages")
+
+local LoadPriority = {
+	SHARED_PACKAGES,
+	SERVER_PACKAGES,
+}
 
 --> Types
 
@@ -71,7 +77,7 @@ local function recurseDirectory(folder, looking)
 end
 
 local function iterateWallyFolder(folder, lookingFor: string)
-	local wallyIndex = assert(folder:FindFirstChild("_Index"), "No Wally._Index found in " .. folder.Name)
+	local wallyIndex = assert(folder:FindFirstChild("_Index"), "No ._Index found in " .. folder.Name)
 
 	local packageName = lookingFor -- used to find the init.lua
 
@@ -84,7 +90,7 @@ local function iterateWallyFolder(folder, lookingFor: string)
 			end
 
 			if packageInfo.Name == lookingFor:lower() then -- Supports, "Promise", "promise", "PROMISE"
-				packageName = package.Name
+				packageName = packageInfo.Name
 			end
 
 			local found = recurseDirectory(package, packageName)
@@ -100,7 +106,7 @@ end
 local function searchPackages(packageFolder, lookingFor: string)
 	local module
 	for package in iterateWallyFolder(packageFolder, lookingFor) do
-		if package.Name ~= lookingFor then
+		if package.Name:lower() ~= lookingFor:lower() then -- the REAL package name is probably lowercase.
 			continue
 		end
 
@@ -110,32 +116,26 @@ local function searchPackages(packageFolder, lookingFor: string)
 	return module
 end
 
-return function(requester, moduleName: string) -- do we make it return a promise?
+local function dependencySearch(requester, moduleName: string) -- do we make it return a promise?
 	assert(typeof(requester) == "Instance", "Invalid requester")
 	assert(type(moduleName) == "string", "Invalid moduleName")
 
 	local module
 
-	if SHARED_PACKAGES then
-		module = searchPackages(SHARED_PACKAGES, moduleName)
-
-		if module then
-			return module
-		end
-	end
-
-	if SERVER_PACKAGES then
-		module = searchPackages(SERVER_PACKAGES, moduleName)
-
-		if module then
-			return module
-		end
-	end
-
 	module = requester:FindFirstChild(moduleName)
 
 	if module then
 		return module
+	end
+
+	for _, folder in pairs(LoadPriority) do
+		if folder then
+			module = searchPackages(folder, moduleName)
+
+			if module then
+				return module
+			end
+		end
 	end
 
 	for found in recurseDirectory(requester, moduleName) do
@@ -146,3 +146,8 @@ return function(requester, moduleName: string) -- do we make it return a promise
 
 	return nil
 end
+
+return {
+	search = dependencySearch,
+	priority = LoadPriority,
+}

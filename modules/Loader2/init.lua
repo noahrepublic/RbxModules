@@ -4,7 +4,7 @@
 
 --> Includes
 
-local PackageSearch = require(script.Dependency)
+local Dependency = require(script.Dependency)
 
 --> Private Functions
 
@@ -17,7 +17,7 @@ local function loadModule(moduleScript: ModuleScript) -- a module is provided fo
 	return function(requestedModule)
 		if type(requestedModule) == "string" then
 			-- string load from here
-			local module = PackageSearch(moduleScript, requestedModule)
+			local module = Dependency.search(moduleScript, requestedModule)
 
 			if module then
 				module = require(module)
@@ -32,4 +32,7 @@ end
 
 --> Functions
 
-return loadModule
+return {
+	load = loadModule,
+	priority = Dependency.priority,
+}

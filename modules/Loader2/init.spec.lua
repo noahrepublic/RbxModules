@@ -1,5 +1,6 @@
 return function()
-	local require = require(script.Parent)(script.Parent)
+	local loader = require(script.Parent)
+	local require = loader.load(script.Parent)
 
 	describe("(TestModule) direct child", function()
 		it("should string load 'TestModule'", function()
@@ -30,6 +31,19 @@ return function()
 			local testModule = require(script.Parent.TestModule)
 
 			expect(testModule.Name).to.equal("TestModule")
+		end)
+	end)
+
+	describe("should priority load", function() -- not really a good test :/
+		it("should be in the priority table", function()
+			table.insert(loader.priority, script.Parent.TestModule.TestModules2)
+			expect(table.find(loader.priority, script.Parent.TestModule.TestModules2)).to.be.ok()
+		end)
+
+		it("should load by string", function()
+			local testModule = require("BaseObject")
+
+			expect(testModule).to.equal(require(script.Parent.TestModule.TestModules2._Index.BaseObject))
 		end)
 	end)
 end

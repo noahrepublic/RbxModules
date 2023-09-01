@@ -29,9 +29,8 @@ return function()
 		Init = function(bag)
 			data.TestService.Inited = true
 			print(bag)
-			local test = bag:GetService(testService2)
 
-			print(test)
+			local test = bag:GetService(testService2)
 		end,
 
 		Start = function()
@@ -40,7 +39,10 @@ return function()
 	}
 
 	serviceBag:GetService(testService)
+
 	serviceBag:Init()
+
+	task.wait()
 	serviceBag:Start()
 
 	describe("Start up", function()
