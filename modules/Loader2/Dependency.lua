@@ -108,6 +108,10 @@ local function searchPackages(packageFolder, lookingFor: string)
 			continue
 		end
 
+		if not package:IsA("ModuleScript") then
+			continue
+		end
+
 		module = package
 	end
 
