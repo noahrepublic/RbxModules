@@ -77,14 +77,12 @@ local function recurseDirectory(folder, looking)
 end
 
 local function iterateWallyFolder(folder, lookingFor: string)
-	local wallyIndex = folder:FindFirstChild("_Index") -- not required anymore, for custom priority. having a valid _Index saves a directory loop.
 
-	local start = wallyIndex or folder
 
 	local packageName = lookingFor -- used to find the init.lua
 
 	return coroutine.wrap(function()
-		for _, package in pairs(start:GetChildren()) do
+		for _, package in pairs(folder:GetChildren()) do
 			local packageInfo = wallyPackageInfo(package.Name)
 
 			if packageInfo and packageInfo.Name == lookingFor:lower() then -- Supports, "Promise", "promise", "PROMISE"
