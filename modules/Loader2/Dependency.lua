@@ -77,8 +77,6 @@ local function recurseDirectory(folder, looking)
 end
 
 local function iterateWallyFolder(folder, lookingFor: string)
-
-
 	local packageName = lookingFor -- used to find the init.lua
 
 	return coroutine.wrap(function()
@@ -87,6 +85,10 @@ local function iterateWallyFolder(folder, lookingFor: string)
 
 			if packageInfo and packageInfo.Name == lookingFor:lower() then -- Supports, "Promise", "promise", "PROMISE"
 				packageName = packageInfo.Name
+			end
+
+			if package.Name == lookingFor then
+				coroutine.yield(package)
 			end
 
 			local found = recurseDirectory(package, packageName)
