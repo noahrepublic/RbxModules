@@ -94,7 +94,6 @@ local function iterateWallyFolder(folder, lookingFor: string)
 			local found = recurseDirectory(package, packageName)
 
 			for child in found do
-				print("Recursed to" .. child.Name)
 				coroutine.yield(child)
 			end
 		end
